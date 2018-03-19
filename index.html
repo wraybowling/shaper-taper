@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <title>Shaper Tape Generator</title>
+  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Stardos+Stencil" rel="stylesheet"> 
+
+  <style>
+    .domino-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(2in, 1fr));
+      grid-template-rows: repeat(auto-fit, auto);
+      grid-column-gap: 0.2in;
+      grid-row-gap: 2in;
+    }
+    .domino{
+      page-break-inside: avoid;
+    }
+    nav{
+      background-color:#333;
+      color:#eee;
+    }
+    h1{
+      font-family: 'Stardos Stencil';
+      font-weight:normal;
+      font-size: 0.5in;
+    }
+  </style>
+</head>
+
+<body>
+  <svg height="0" width="0">
+    <defs>
+      <rect id="domino_body" width="1.6666in" height="0.5in" rx="0.1in" style="fill:black; stroke-size:0.01in; stroke:black;"/>
+      <circle id="domino_dot" cx="0" cy="0" r="0.05in" style="fill:white"/>
+    </defs>
+  </svg>
+
+  <div id="app">
+    <nav>
+      <h2>Shaper Taper</h2>
+      <input type="text" v-model="randomSeed" placeholder="random seed">
+      <input type="number" v-model="dominoCount" min="1">
+      <input type="number" v-model="rowSpacing" min="1">
+      <input type="submit" value="Print">
+    </nav>
+
+    <h1>{{randomSeed}}</h1>
+
+    <!-- <svg style="margin-left:-20px; height:70px">
+        <path d="M 28.346456692913392 66.89763779527559A9.448818897637796,9.448818897637796 0 0,1 18.8976377952756,57.44881889763779L 18.8976377952756 28.34645669291339A9.448818897637796,9.448818897637796 0 0,1 28.346456692913392,18.897637795275593L 171.9685039370079 18.897637795275593A9.448818897637796,9.448818897637796 0 0,1 181.4173228346457,28.34645669291339L 181.4173228346457 57.44881889763779A9.448818897637796,9.448818897637796 0 0,1 171.9685039370079,66.89763779527559z" fill="black" stroke="none" /><circle cx="34.015748031496074" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="34.015748031496074" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="52.91338582677167" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="71.81102362204726" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="33.44881889763779" fill="white" r="4.724409448818898" />
+    </svg> -->
+
+    <div class="domino-grid">
+      <!-- <domino-template  dots="permutation[d]"/> -->
+
+      <svg width="2.02in" height="0.5in" class="domino" v-for="d in permutation" :key="d">
+        <use xlink:href="#domino_body" x="0.01in"/>
+        <!-- dots that never go away -->
+        <use xlink:href="#domino_dot" x="0.14in" y="0.16in"/>
+        <use xlink:href="#domino_dot" x="0.14in" y="0.35in"/>
+        <use xlink:href="#domino_dot" x="1.51in" y="0.16in"/>
+        <use xlink:href="#domino_dot" x="1.51in" y="0.35in"/>
+        
+        <!-- row 1 (left to right) -->
+        <use xlink:href="#domino_dot" x="0.335714in" y="0.16in" v-if="d[0]" />
+        <use xlink:href="#domino_dot" x="0.531428in" y="0.16in" v-if="d[1]"/>
+        <use xlink:href="#domino_dot" x="0.727143in" y="0.16in" v-if="d[2]"/>
+        <use xlink:href="#domino_dot" x="0.922857in" y="0.16in" v-if="d[3]"/>
+        <use xlink:href="#domino_dot" x="1.118571in" y="0.16in" v-if="d[4]"/>
+        <use xlink:href="#domino_dot" x="1.314286in" y="0.16in" v-if="d[5]"/>
+        
+        <!-- row 2 (right to left) -->
+        <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[6]" />
+        <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[7]"/>
+        <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[8]"/>
+        <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[9]"/>
+        <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[10]"/>
+        <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[11]"/>
+      </svg>
+    
+    </div>
+  </div>
+
+
+
+  <script>
+    const blankDots = 4;
+    const possibleSlots = 12;
+
+    let validCombinations = [];
+    for(let offset = blankDots - 1; offset > 0; offset--) {
+      for(let pyramid = possibleSlots - blankDots + 1; pyramid > 1; pyramid--){
+        let set =[];
+        for(let i=0; i<offset; i++) set.push(true);
+        for(let i=0; i<pyramid; i++) set.push(false);
+        set.push(true);
+        while(set.length < possibleSlots) set.push(false);
+        validCombinations.push(set)
+      }
+    }
+
+    console.log(validCombinations)
+
+    const app = new Vue({
+      el: '#app',
+      components: {'domino-template': {template: "#domino-template"} },
+      data() {
+        return {
+          randomSeed: 'My Rad Project',
+          dominoCount: 25,
+          rowSpacing: 20
+        }
+      },
+      computed: {
+        permutation() {
+          Math.seedrandom(this.randomSeed)
+          return validCombinations.sort( function() { return Math.random() - 0.5 }).slice(0,this.dominoCount)
+        }
+      }
+    })
+  </script>
+</body>
+</html>

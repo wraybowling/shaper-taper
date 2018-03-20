@@ -42,7 +42,7 @@
     <nav>
       <h2>Shaper Taper</h2>
       <input type="text" v-model="randomSeed" placeholder="random seed">
-      <input type="number" v-model="dominoCount" min="1">
+      <input type="number" v-model="dominoCount" min="1" max="373">
       <input type="number" v-model="rowSpacing" min="1">
       <input type="submit" value="Print">
     </nav>
@@ -55,8 +55,9 @@
 
     <div class="domino-grid">
       <!-- <domino-template  dots="permutation[d]"/> -->
+      <div v-for="d in permutation" :key="d" class="domino">
+      <svg width="2.02in" height="0.5in">
 
-      <svg width="2.02in" height="0.5in" class="domino" v-for="d in permutation" :key="d">
         <use xlink:href="#domino_body" x="0.01in"/>
         <!-- dots that never go away -->
         <use xlink:href="#domino_dot" x="0.14in" y="0.16in"/>
@@ -65,44 +66,114 @@
         <use xlink:href="#domino_dot" x="1.51in" y="0.35in"/>
         
         <!-- row 1 (left to right) -->
-        <use xlink:href="#domino_dot" x="0.335714in" y="0.16in" v-if="d[0]" />
-        <use xlink:href="#domino_dot" x="0.531428in" y="0.16in" v-if="d[1]"/>
-        <use xlink:href="#domino_dot" x="0.727143in" y="0.16in" v-if="d[2]"/>
-        <use xlink:href="#domino_dot" x="0.922857in" y="0.16in" v-if="d[3]"/>
-        <use xlink:href="#domino_dot" x="1.118571in" y="0.16in" v-if="d[4]"/>
-        <use xlink:href="#domino_dot" x="1.314286in" y="0.16in" v-if="d[5]"/>
+        <use xlink:href="#domino_dot" x="0.335714in" y="0.16in" v-if="d[0][0]"/>
+        <use xlink:href="#domino_dot" x="0.531428in" y="0.16in" v-if="d[0][1]"/>
+        <use xlink:href="#domino_dot" x="0.727143in" y="0.16in" v-if="d[0][2]"/>
+        <use xlink:href="#domino_dot" x="0.922857in" y="0.16in" v-if="d[0][3]"/>
+        <use xlink:href="#domino_dot" x="1.118571in" y="0.16in" v-if="d[0][4]"/>
+        <use xlink:href="#domino_dot" x="1.314286in" y="0.16in" v-if="d[0][5]"/>
         
         <!-- row 2 (right to left) -->
-        <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[6]" />
-        <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[7]"/>
-        <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[8]"/>
-        <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[9]"/>
-        <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[10]"/>
-        <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[11]"/>
+        <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[1][0]" />
+        <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[1][1]"/>
+        <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[1][2]"/>
+        <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[1][3]"/>
+        <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[1][4]"/>
+        <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[1][5]"/>
+
+        <!-- left to right version for visual debugging -->
+        <!-- <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[1][0]"/>
+        <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[1][1]"/>
+        <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[1][2]"/>
+        <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[1][3]"/>
+        <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[1][4]"/>
+        <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[1][5]"/> -->
+        
       </svg>
+      </div>
     
     </div>
   </div>
 
-
-
   <script>
-    const blankDots = 4;
-    const possibleSlots = 12;
+    const validBitCombos = [
+    [ //0 one/five bit
+      [0,0,0,0,0,1],
+      [0,0,0,0,1,0],
+      [0,0,0,1,0,0],
+      [0,0,1,0,0,0],
+      [0,1,0,0,0,0],
+      [1,0,0,0,0,0],
+    ],
 
-    let validCombinations = [];
-    for(let offset = blankDots - 1; offset > 0; offset--) {
-      for(let pyramid = possibleSlots - blankDots + 1; pyramid > 1; pyramid--){
-        let set =[];
-        for(let i=0; i<offset; i++) set.push(true);
-        for(let i=0; i<pyramid; i++) set.push(false);
-        set.push(true);
-        while(set.length < possibleSlots) set.push(false);
-        validCombinations.push(set)
+    [ //1 two/four bit
+      [0,0,0,0,1,1],
+      [0,0,0,1,1,0],
+      [0,0,1,1,0,0],
+      [0,1,1,0,0,0],
+      [1,1,0,0,0,0],
+
+      [0,0,0,1,0,1],
+      [0,0,1,0,1,0],
+      [0,1,0,1,0,0],
+      [1,0,1,0,0,0],
+
+      [0,0,1,0,0,1],
+      [0,1,0,0,1,0],
+      [1,0,0,1,0,0],
+
+      [0,1,0,0,0,1],
+      [1,0,0,0,1,0],
+
+      [1,0,0,0,0,1],
+    ],
+
+    [ //2 three bit
+      [0,0,0,1,1,1],
+      [0,0,1,1,1,0],
+      [0,1,1,1,0,0],
+      [1,1,1,0,0,0],
+      
+      [0,0,1,0,1,1],
+      [0,1,0,1,1,0],
+      [1,0,1,1,0,0],
+
+      [0,0,1,1,0,1],
+      [0,1,1,0,1,0],
+      [1,1,0,1,0,0],
+
+      [0,1,0,1,0,1],
+      [1,0,1,0,1,0],
+    ]]
+
+    let validCombinations = [
+      [[0,0,0,0,0,0],[1,1,1,1,1,1]]
+    ];
+
+    function invert(arr){
+      newarr = []
+      for(let i=0; i<arr.length; i++){
+        newarr.push( (arr[i] === 1) ? 0 : 1 )
+      }
+      return newarr
+    }
+
+    // match each subset of valid bit combos with every inverted combination
+    // 1 with inverted 5
+    // 2 with inverted 4
+    // 3 with itself without repeating
+
+    for(let subset=0; subset<validBitCombos.length; subset++) {
+      for(let topRow=0; topRow<validBitCombos[subset].length; topRow++){
+        for(let botRow=0; botRow<validBitCombos[subset].length; botRow++){
+          if(topRow !== botRow) {
+            validCombinations.push( [validBitCombos[subset][topRow], invert(validBitCombos[subset][botRow])] )
+          }
+        }
       }
     }
 
-    console.log(validCombinations)
+    // console.log(validCombinations)
 
     const app = new Vue({
       el: '#app',
@@ -116,8 +187,16 @@
       },
       computed: {
         permutation() {
+          let shuffledDominoes = validCombinations
           Math.seedrandom(this.randomSeed)
-          return validCombinations.sort( function() { return Math.random() - 0.5 }).slice(0,this.dominoCount)
+          for(let i=shuffledDominoes.length - 1; i>=0; i--){
+            let select = Math.floor(Math.random() * i)
+            let swap = shuffledDominoes[select]
+            shuffledDominoes[select] = shuffledDominoes[i]
+            shuffledDominoes[i] = swap
+          }
+          // shuffledDominoes.length = this.dominoCount
+          return shuffledDominoes
         }
       }
     })

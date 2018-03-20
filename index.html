@@ -190,16 +190,18 @@
       },
       computed: {
         permutation() {
-          let shuffledDominoes = this.validCombos;
+          let shuffledDominoes = [].concat(this.validCombos);
           Math.seedrandom(this.randomSeed);
-          for(let i=this.validCombos-1; i>=0; i--){
+          for(let i=this.validCombos.length-1; i>=0; i--){
             let select = Math.floor(Math.random() * i);
-            let swap = shuffledDominoes[select];
-            shuffledDominoes[select] = shuffledDominoes[i];
-            shuffledDominoes[i] = swap;
+            let swap = shuffledDominoes[i];
+            shuffledDominoes[i] = shuffledDominoes[select];
+            shuffledDominoes[select] = swap;
+            console.log
           }
-          shuffledDominoes.length = this.dominoCount;
-          return shuffledDominoes;//.slice(0,this.dominoCount);
+          console.log(shuffledDominoes[0][0])
+          // shuffledDominoes.length = this.dominoCount;
+          return shuffledDominoes.slice(0,this.dominoCount);
         }
       }
     })

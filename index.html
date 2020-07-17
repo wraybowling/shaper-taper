@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Shaper Taper 🀺🁘🁊🁜 Generate repeatable Shaper Origin dominos</title>
+    <title>Shaper Taper 🀺🁘🁊🁜 Generate repeatable Shaper Origin dominoes</title>
     <meta charset="utf-8" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
@@ -9,59 +9,7 @@
       href="https://fonts.googleapis.com/css?family=Stardos+Stencil"
       rel="stylesheet"
     />
-
-    <style>
-      .domino-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(1.75in, 1fr));
-        grid-template-rows: repeat(auto-fit, auto);
-        /* grid-column-gap: 0.2in;
-      grid-row-gap: 2in; */
-      }
-      .domino {
-        page-break-inside: avoid;
-      }
-      body {
-        margin: 0;
-      }
-      nav {
-        background-color: rgb(10, 110, 204);
-        color: #eee;
-      }
-      .options {
-        display: flex;
-        flex-direction: row;
-      }
-      .options label {
-        flex: 1;
-      }
-      .options input[type="text"] {
-        width: 100px;
-      }
-      .print {
-        font-size: 2rem;
-        background-color: greenyellow;
-        border-radius: 10px;
-        border: solid 3px black;
-        cursor: pointer;
-      }
-      @media print {
-        nav {
-          display: none;
-        }
-        .print {
-          display: none;
-        }
-      }
-      h1 {
-        font-family: "Stardos Stencil";
-        font-weight: normal;
-        font-size: 0.5in;
-      }
-      h2 {
-        margin-top: 0;
-      }
-    </style>
+    <link rel="stylesheet" href="shaper-taper.css" />
   </head>
 
   <body>
@@ -83,7 +31,7 @@
         <h2>Shaper Taper</h2>
         <p>
           Print out a regular sheet of paper with Shaper Origin compatible
-          fudicial dominos on it. Default presets are optimal for a 8x11" US
+          fudicial dominoes on it. Default presets are optimal for a 8x11" US
           letter.
         </p>
         <p>The dominoes generated will always match the Project Name.</p>
@@ -94,7 +42,7 @@
           </label>
           <label>
             <input type="number" v-model="dominoCount" min="1" max="373" />
-            Dominos
+            Dominoes
           </label>
           <label>
             <input type="number" v-model="rowSpacing" min="1" size="1" />
@@ -111,10 +59,6 @@
         {{randomSeed}}
         <button class="print" onClick="window.print()">Print</button>
       </h1>
-
-      <!-- <svg style="margin-left:-20px; height:70px">
-        <path d="M 28.346456692913392 66.89763779527559A9.448818897637796,9.448818897637796 0 0,1 18.8976377952756,57.44881889763779L 18.8976377952756 28.34645669291339A9.448818897637796,9.448818897637796 0 0,1 28.346456692913392,18.897637795275593L 171.9685039370079 18.897637795275593A9.448818897637796,9.448818897637796 0 0,1 181.4173228346457,28.34645669291339L 181.4173228346457 57.44881889763779A9.448818897637796,9.448818897637796 0 0,1 171.9685039370079,66.89763779527559z" fill="black" stroke="none" /><circle cx="34.015748031496074" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="34.015748031496074" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="52.91338582677167" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="71.81102362204726" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="33.44881889763779" fill="white" r="4.724409448818898" />
-    </svg> -->
 
       <div
         class="domino-grid"
@@ -218,129 +162,6 @@
       </div>
     </div>
 
-    <script>
-      const validBitCombos = [
-        [
-          //0 one/five bit
-          [0, 0, 0, 0, 0, 1],
-          [0, 0, 0, 0, 1, 0],
-          [0, 0, 0, 1, 0, 0],
-          [0, 0, 1, 0, 0, 0],
-          [0, 1, 0, 0, 0, 0],
-          [1, 0, 0, 0, 0, 0],
-        ],
-
-        [
-          //1 two/four bit
-          [0, 0, 0, 0, 1, 1],
-          [0, 0, 0, 1, 1, 0],
-          [0, 0, 1, 1, 0, 0],
-          [0, 1, 1, 0, 0, 0],
-          [1, 1, 0, 0, 0, 0],
-
-          [0, 0, 0, 1, 0, 1],
-          [0, 0, 1, 0, 1, 0],
-          [0, 1, 0, 1, 0, 0],
-          [1, 0, 1, 0, 0, 0],
-
-          [0, 0, 1, 0, 0, 1],
-          [0, 1, 0, 0, 1, 0],
-          [1, 0, 0, 1, 0, 0],
-
-          [0, 1, 0, 0, 0, 1],
-          [1, 0, 0, 0, 1, 0],
-
-          [1, 0, 0, 0, 0, 1],
-        ],
-
-        [
-          //2 three bit
-          [0, 0, 0, 1, 1, 1],
-          [0, 0, 1, 1, 1, 0],
-          [0, 1, 1, 1, 0, 0],
-          [1, 1, 1, 0, 0, 0],
-
-          [0, 0, 1, 0, 1, 1],
-          [0, 1, 0, 1, 1, 0],
-          [1, 0, 1, 1, 0, 0],
-
-          [0, 0, 1, 1, 0, 1],
-          [0, 1, 1, 0, 1, 0],
-          [1, 1, 0, 1, 0, 0],
-
-          [0, 1, 0, 1, 0, 1],
-          [1, 0, 1, 0, 1, 0],
-        ],
-      ];
-
-      let validCombinations = [
-        [
-          [0, 0, 0, 0, 0, 0],
-          [1, 1, 1, 1, 1, 1],
-        ],
-      ];
-
-      function invert(arr) {
-        newarr = [];
-        for (let i = 0; i < arr.length; i++) {
-          newarr.push(arr[i] === 1 ? 0 : 1);
-        }
-        return newarr;
-      }
-
-      // match each subset of valid bit combos with every inverted combination
-      // 1 with inverted 5
-      // 2 with inverted 4
-      // 3 with itself without repeating
-
-      for (let subset = 0; subset < validBitCombos.length; subset++) {
-        for (let topRow = 0; topRow < validBitCombos[subset].length; topRow++) {
-          for (
-            let botRow = 0;
-            botRow < validBitCombos[subset].length;
-            botRow++
-          ) {
-            if (topRow !== botRow) {
-              validCombinations.push([
-                validBitCombos[subset][topRow],
-                invert(validBitCombos[subset][botRow]),
-              ]);
-            }
-          }
-        }
-      }
-
-      // console.log(validCombinations)
-
-      const app = new Vue({
-        el: "#app",
-        components: { "domino-template": { template: "#domino-template" } },
-        data() {
-          return {
-            randomSeed: "My Rad Project",
-            dominoCount: 28,
-            rowSpacing: 20,
-            columnSpacing: 1,
-            validCombos: validCombinations,
-          };
-        },
-        computed: {
-          permutation() {
-            let shuffledDominoes = [].concat(this.validCombos);
-            Math.seedrandom(this.randomSeed);
-            for (let i = this.validCombos.length - 1; i >= 0; i--) {
-              let select = Math.floor(Math.random() * i);
-              let swap = shuffledDominoes[i];
-              shuffledDominoes[i] = shuffledDominoes[select];
-              shuffledDominoes[select] = swap;
-              console.log;
-            }
-            console.log(shuffledDominoes[0][0]);
-            // shuffledDominoes.length = this.dominoCount;
-            return shuffledDominoes.slice(0, this.dominoCount);
-          },
-        },
-      });
-    </script>
+    <script src="shaper-taper.js"></script>
   </body>
 </html>

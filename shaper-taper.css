@@ -1,0 +1,50 @@
+.domino-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1.75in, 1fr));
+  grid-template-rows: repeat(auto-fit, auto);
+  /* grid-column-gap: 0.2in;
+grid-row-gap: 2in; */
+}
+.domino {
+  page-break-inside: avoid;
+}
+body {
+  margin: 0;
+}
+nav {
+  background-color: rgb(10, 110, 204);
+  color: #eee;
+}
+.options {
+  display: flex;
+  flex-direction: row;
+}
+.options label {
+  flex: 1;
+}
+.options input[type="text"] {
+  width: 100px;
+}
+.print {
+  font-size: 2rem;
+  background-color: greenyellow;
+  border-radius: 10px;
+  border: solid 3px black;
+  cursor: pointer;
+}
+@media print {
+  nav {
+    display: none;
+  }
+  .print {
+    display: none;
+  }
+}
+h1 {
+  font-family: "Stardos Stencil";
+  font-weight: normal;
+  font-size: 0.5in;
+}
+h2 {
+  margin-top: 0;
+}

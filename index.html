@@ -1,210 +1,346 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-  <title>Shaper Tape Generator</title>
-  <meta charset="utf-8">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Stardos+Stencil" rel="stylesheet"> 
+  <head>
+    <title>Shaper Tape Generator</title>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Stardos+Stencil"
+      rel="stylesheet"
+    />
 
-  <style>
-    .domino-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(1.75in, 1fr));
-      grid-template-rows: repeat(auto-fit, auto);
-      /* grid-column-gap: 0.2in;
+    <style>
+      .domino-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(1.75in, 1fr));
+        grid-template-rows: repeat(auto-fit, auto);
+        /* grid-column-gap: 0.2in;
       grid-row-gap: 2in; */
-    }
-    .domino{
-      page-break-inside: avoid;
-    }
-    nav{
-      background-color:#333;
-      color:#eee;
-    }
-    h1{
-      font-family: 'Stardos Stencil';
-      font-weight:normal;
-      font-size: 0.5in;
-    }
-  </style>
-</head>
+      }
+      .domino {
+        page-break-inside: avoid;
+      }
+      body {
+        margin: 0;
+      }
+      nav {
+        background-color: rgb(10, 110, 204);
+        color: #eee;
+      }
+      .options {
+        display: flex;
+        flex-direction: row;
+      }
+      .options label {
+        flex: 1;
+      }
+      .options input[type="text"] {
+        width: 100px;
+      }
+      .print {
+        font-size: 2rem;
+        background-color: greenyellow;
+        border-radius: 10px;
+        border: solid 3px black;
+        cursor: pointer;
+      }
+      @media print {
+        nav {
+          display: none;
+        }
+        .print {
+          display: none;
+        }
+      }
+      h1 {
+        font-family: "Stardos Stencil";
+        font-weight: normal;
+        font-size: 0.5in;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
 
-<body>
-  <svg height="0" width="0">
-    <defs>
-      <rect id="domino_body" width="1.6666in" height="0.5in" rx="0.1in" style="fill:black; stroke-size:0.01in; stroke:black;"/>
-      <circle id="domino_dot" cx="0" cy="0" r="0.05in" style="fill:white"/>
-    </defs>
-  </svg>
+  <body>
+    <svg height="0" width="0" style="display: none;">
+      <defs>
+        <rect
+          id="domino_body"
+          width="1.6666in"
+          height="0.5in"
+          rx="0.1in"
+          style="fill: black; stroke-size: 0.01in; stroke: black;"
+        />
+        <circle id="domino_dot" cx="0" cy="0" r="0.05in" style="fill: white;" />
+      </defs>
+    </svg>
 
-  <div id="app">
-    <nav>
-      <h2>Shaper Taper</h2>
-      <input type="text" v-model="randomSeed" placeholder="random seed">
-      <input type="number" v-model="dominoCount" min="1" max="373">
-      <input type="number" v-model="rowSpacing" min="1">
-      <input type="number" v-model="columnSpacing" min="1">
-      <input type="submit" value="Print">
-    </nav>
+    <div id="app">
+      <nav>
+        <h2>Shaper Taper</h2>
+        <p>
+          Print out a regular sheet of paper with Shaper Origin compatible
+          fudicial dominos on it. Default presets are optimal for a 8x11" US
+          letter.
+        </p>
+        <p>The dominoes generated will always match the Project Name.</p>
+        <div class="options">
+          <label>
+            <input type="text" v-model="randomSeed" placeholder="random seed" />
+            Project Name
+          </label>
+          <label>
+            <input type="number" v-model="dominoCount" min="1" max="373" />
+            Dominos
+          </label>
+          <label>
+            <input type="number" v-model="rowSpacing" min="1" size="1" />
+            Row Spacing
+          </label>
+          <label>
+            <input type="number" v-model="columnSpacing" min="1" size="1" />
+            Column Spacing
+          </label>
+        </div>
+      </nav>
 
-    <h1>{{randomSeed}}</h1>
+      <h1>
+        {{randomSeed}}
+        <button class="print" onClick="window.print()">Print</button>
+      </h1>
 
-    <!-- <svg style="margin-left:-20px; height:70px">
+      <!-- <svg style="margin-left:-20px; height:70px">
         <path d="M 28.346456692913392 66.89763779527559A9.448818897637796,9.448818897637796 0 0,1 18.8976377952756,57.44881889763779L 18.8976377952756 28.34645669291339A9.448818897637796,9.448818897637796 0 0,1 28.346456692913392,18.897637795275593L 171.9685039370079 18.897637795275593A9.448818897637796,9.448818897637796 0 0,1 181.4173228346457,28.34645669291339L 181.4173228346457 57.44881889763779A9.448818897637796,9.448818897637796 0 0,1 171.9685039370079,66.89763779527559z" fill="black" stroke="none" /><circle cx="34.015748031496074" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="34.015748031496074" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="52.91338582677167" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="71.81102362204726" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="90.70866141732286" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="109.60629921259844" cy="33.44881889763779" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="52.34645669291339" fill="white" r="4.724409448818898" /><circle cx="166.29921259842524" cy="33.44881889763779" fill="white" r="4.724409448818898" />
     </svg> -->
 
-    <div class="domino-grid" :style="{ 'grid-column-gap': columnSpacing+'mm', 'grid-row-gap': rowSpacing+'mm'}">
-      <!-- <domino-template  dots="permutation[d]"/> -->
-      <div v-for="d in permutation" class="domino">
-      <svg width="2.02in" height="0.5in">
+      <div
+        class="domino-grid"
+        :style="{ 'grid-column-gap': columnSpacing+'mm', 'grid-row-gap': rowSpacing+'mm'}"
+      >
+        <!-- <domino-template  dots="permutation[d]"/> -->
+        <div v-for="d in permutation" class="domino">
+          <svg width="2.02in" height="0.5in">
+            <use xlink:href="#domino_body" x="0.01in" />
+            <!-- dots that never go away -->
+            <use xlink:href="#domino_dot" x="0.14in" y="0.16in" />
+            <use xlink:href="#domino_dot" x="0.14in" y="0.35in" />
+            <use xlink:href="#domino_dot" x="1.51in" y="0.16in" />
+            <use xlink:href="#domino_dot" x="1.51in" y="0.35in" />
 
-        <use xlink:href="#domino_body" x="0.01in"/>
-        <!-- dots that never go away -->
-        <use xlink:href="#domino_dot" x="0.14in" y="0.16in"/>
-        <use xlink:href="#domino_dot" x="0.14in" y="0.35in"/>
-        <use xlink:href="#domino_dot" x="1.51in" y="0.16in"/>
-        <use xlink:href="#domino_dot" x="1.51in" y="0.35in"/>
-        
-        <!-- row 1 (left to right) -->
-        <use xlink:href="#domino_dot" x="0.335714in" y="0.16in" v-if="d[0][0]"/>
-        <use xlink:href="#domino_dot" x="0.531428in" y="0.16in" v-if="d[0][1]"/>
-        <use xlink:href="#domino_dot" x="0.727143in" y="0.16in" v-if="d[0][2]"/>
-        <use xlink:href="#domino_dot" x="0.922857in" y="0.16in" v-if="d[0][3]"/>
-        <use xlink:href="#domino_dot" x="1.118571in" y="0.16in" v-if="d[0][4]"/>
-        <use xlink:href="#domino_dot" x="1.314286in" y="0.16in" v-if="d[0][5]"/>
-        
-        <!-- row 2 (right to left) -->
-        <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[1][0]" />
-        <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[1][1]"/>
-        <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[1][2]"/>
-        <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[1][3]"/>
-        <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[1][4]"/>
-        <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[1][5]"/>
+            <!-- row 1 (left to right) -->
+            <use
+              xlink:href="#domino_dot"
+              x="0.335714in"
+              y="0.16in"
+              v-if="d[0][0]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.531428in"
+              y="0.16in"
+              v-if="d[0][1]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.727143in"
+              y="0.16in"
+              v-if="d[0][2]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.922857in"
+              y="0.16in"
+              v-if="d[0][3]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="1.118571in"
+              y="0.16in"
+              v-if="d[0][4]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="1.314286in"
+              y="0.16in"
+              v-if="d[0][5]"
+            />
 
-        <!-- left to right version for visual debugging -->
-        <!-- <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[1][0]"/>
+            <!-- row 2 (right to left) -->
+            <use
+              xlink:href="#domino_dot"
+              x="1.314286in"
+              y="0.35in"
+              v-if="d[1][0]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="1.118571in"
+              y="0.35in"
+              v-if="d[1][1]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.922857in"
+              y="0.35in"
+              v-if="d[1][2]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.7237143in"
+              y="0.35in"
+              v-if="d[1][3]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.5341428in"
+              y="0.35in"
+              v-if="d[1][4]"
+            />
+            <use
+              xlink:href="#domino_dot"
+              x="0.3345714in"
+              y="0.35in"
+              v-if="d[1][5]"
+            />
+
+            <!-- left to right version for visual debugging -->
+            <!-- <use xlink:href="#domino_dot" x="0.3345714in" y="0.35in" v-if="d[1][0]"/>
         <use xlink:href="#domino_dot" x="0.5341428in" y="0.35in" v-if="d[1][1]"/>
         <use xlink:href="#domino_dot" x="0.7237143in" y="0.35in" v-if="d[1][2]"/>
         <use xlink:href="#domino_dot" x="0.922857in" y="0.35in" v-if="d[1][3]"/>
         <use xlink:href="#domino_dot" x="1.118571in" y="0.35in" v-if="d[1][4]"/>
         <use xlink:href="#domino_dot" x="1.314286in" y="0.35in" v-if="d[1][5]"/> -->
-        
-      </svg>
+          </svg>
+        </div>
       </div>
-    
     </div>
-  </div>
 
-  <script>
-    const validBitCombos = [
-    [ //0 one/five bit
-      [0,0,0,0,0,1],
-      [0,0,0,0,1,0],
-      [0,0,0,1,0,0],
-      [0,0,1,0,0,0],
-      [0,1,0,0,0,0],
-      [1,0,0,0,0,0],
-    ],
+    <script>
+      const validBitCombos = [
+        [
+          //0 one/five bit
+          [0, 0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 1, 0],
+          [0, 0, 0, 1, 0, 0],
+          [0, 0, 1, 0, 0, 0],
+          [0, 1, 0, 0, 0, 0],
+          [1, 0, 0, 0, 0, 0],
+        ],
 
-    [ //1 two/four bit
-      [0,0,0,0,1,1],
-      [0,0,0,1,1,0],
-      [0,0,1,1,0,0],
-      [0,1,1,0,0,0],
-      [1,1,0,0,0,0],
+        [
+          //1 two/four bit
+          [0, 0, 0, 0, 1, 1],
+          [0, 0, 0, 1, 1, 0],
+          [0, 0, 1, 1, 0, 0],
+          [0, 1, 1, 0, 0, 0],
+          [1, 1, 0, 0, 0, 0],
 
-      [0,0,0,1,0,1],
-      [0,0,1,0,1,0],
-      [0,1,0,1,0,0],
-      [1,0,1,0,0,0],
+          [0, 0, 0, 1, 0, 1],
+          [0, 0, 1, 0, 1, 0],
+          [0, 1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 0, 0],
 
-      [0,0,1,0,0,1],
-      [0,1,0,0,1,0],
-      [1,0,0,1,0,0],
+          [0, 0, 1, 0, 0, 1],
+          [0, 1, 0, 0, 1, 0],
+          [1, 0, 0, 1, 0, 0],
 
-      [0,1,0,0,0,1],
-      [1,0,0,0,1,0],
+          [0, 1, 0, 0, 0, 1],
+          [1, 0, 0, 0, 1, 0],
 
-      [1,0,0,0,0,1],
-    ],
+          [1, 0, 0, 0, 0, 1],
+        ],
 
-    [ //2 three bit
-      [0,0,0,1,1,1],
-      [0,0,1,1,1,0],
-      [0,1,1,1,0,0],
-      [1,1,1,0,0,0],
-      
-      [0,0,1,0,1,1],
-      [0,1,0,1,1,0],
-      [1,0,1,1,0,0],
+        [
+          //2 three bit
+          [0, 0, 0, 1, 1, 1],
+          [0, 0, 1, 1, 1, 0],
+          [0, 1, 1, 1, 0, 0],
+          [1, 1, 1, 0, 0, 0],
 
-      [0,0,1,1,0,1],
-      [0,1,1,0,1,0],
-      [1,1,0,1,0,0],
+          [0, 0, 1, 0, 1, 1],
+          [0, 1, 0, 1, 1, 0],
+          [1, 0, 1, 1, 0, 0],
 
-      [0,1,0,1,0,1],
-      [1,0,1,0,1,0],
-    ]]
+          [0, 0, 1, 1, 0, 1],
+          [0, 1, 1, 0, 1, 0],
+          [1, 1, 0, 1, 0, 0],
 
-    let validCombinations = [
-      [[0,0,0,0,0,0],[1,1,1,1,1,1]]
-    ];
+          [0, 1, 0, 1, 0, 1],
+          [1, 0, 1, 0, 1, 0],
+        ],
+      ];
 
-    function invert(arr){
-      newarr = []
-      for(let i=0; i<arr.length; i++){
-        newarr.push( (arr[i] === 1) ? 0 : 1 )
+      let validCombinations = [
+        [
+          [0, 0, 0, 0, 0, 0],
+          [1, 1, 1, 1, 1, 1],
+        ],
+      ];
+
+      function invert(arr) {
+        newarr = [];
+        for (let i = 0; i < arr.length; i++) {
+          newarr.push(arr[i] === 1 ? 0 : 1);
+        }
+        return newarr;
       }
-      return newarr
-    }
 
-    // match each subset of valid bit combos with every inverted combination
-    // 1 with inverted 5
-    // 2 with inverted 4
-    // 3 with itself without repeating
+      // match each subset of valid bit combos with every inverted combination
+      // 1 with inverted 5
+      // 2 with inverted 4
+      // 3 with itself without repeating
 
-    for(let subset=0; subset<validBitCombos.length; subset++) {
-      for(let topRow=0; topRow<validBitCombos[subset].length; topRow++){
-        for(let botRow=0; botRow<validBitCombos[subset].length; botRow++){
-          if(topRow !== botRow) {
-            validCombinations.push( [validBitCombos[subset][topRow], invert(validBitCombos[subset][botRow])] )
+      for (let subset = 0; subset < validBitCombos.length; subset++) {
+        for (let topRow = 0; topRow < validBitCombos[subset].length; topRow++) {
+          for (
+            let botRow = 0;
+            botRow < validBitCombos[subset].length;
+            botRow++
+          ) {
+            if (topRow !== botRow) {
+              validCombinations.push([
+                validBitCombos[subset][topRow],
+                invert(validBitCombos[subset][botRow]),
+              ]);
+            }
           }
         }
       }
-    }
 
-    // console.log(validCombinations)
+      // console.log(validCombinations)
 
-    const app = new Vue({
-      el: '#app',
-      components: {'domino-template': {template: "#domino-template"} },
-      data() {
-        return {
-          randomSeed: 'My Rad Project',
-          dominoCount: 25,
-          rowSpacing: 20,
-          columnSpacing: 50,
-          validCombos: validCombinations
-        }
-      },
-      computed: {
-        permutation() {
-          let shuffledDominoes = [].concat(this.validCombos);
-          Math.seedrandom(this.randomSeed);
-          for(let i=this.validCombos.length-1; i>=0; i--){
-            let select = Math.floor(Math.random() * i);
-            let swap = shuffledDominoes[i];
-            shuffledDominoes[i] = shuffledDominoes[select];
-            shuffledDominoes[select] = swap;
-            console.log
-          }
-          console.log(shuffledDominoes[0][0])
-          // shuffledDominoes.length = this.dominoCount;
-          return shuffledDominoes.slice(0,this.dominoCount);
-        }
-      }
-    })
-  </script>
-</body>
+      const app = new Vue({
+        el: "#app",
+        components: { "domino-template": { template: "#domino-template" } },
+        data() {
+          return {
+            randomSeed: "My Rad Project",
+            dominoCount: 28,
+            rowSpacing: 20,
+            columnSpacing: 1,
+            validCombos: validCombinations,
+          };
+        },
+        computed: {
+          permutation() {
+            let shuffledDominoes = [].concat(this.validCombos);
+            Math.seedrandom(this.randomSeed);
+            for (let i = this.validCombos.length - 1; i >= 0; i--) {
+              let select = Math.floor(Math.random() * i);
+              let swap = shuffledDominoes[i];
+              shuffledDominoes[i] = shuffledDominoes[select];
+              shuffledDominoes[select] = swap;
+              console.log;
+            }
+            console.log(shuffledDominoes[0][0]);
+            // shuffledDominoes.length = this.dominoCount;
+            return shuffledDominoes.slice(0, this.dominoCount);
+          },
+        },
+      });
+    </script>
+  </body>
 </html>

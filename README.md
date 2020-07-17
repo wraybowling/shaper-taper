@@ -1,6 +1,6 @@
 # Shaper Taper
 
-![Shaper Taper printed on US Letter sheet(https://repository-images.githubusercontent.com/125921973/623e5080-c83e-11ea-9555-989268d060ef)
+![Shaper Taper printed on US Letter sheet](https://repository-images.githubusercontent.com/125921973/623e5080-c83e-11ea-9555-989268d060ef)
 
 Print Shaper Origin compatible dominoes with your browser. [link](https://wraybowling.github.io/shaper_taper/)
 

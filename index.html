@@ -17,135 +17,132 @@
       <defs>
         <rect
           id="domino_body"
-          width="1.6666in"
+          width="1.7in"
           height="0.5in"
           rx="0.1in"
-          style="fill: black; stroke-size: 0.01in; stroke: black;"
+          style="fill:black; stroke:none;"
         />
         <circle id="domino_dot" cx="0" cy="0" r="0.05in" style="fill: white;" />
       </defs>
     </svg>
 
     <div id="app">
-      <nav>
-        <h2>Shaper Taper</h2>
-        <p>
-          Print out a regular sheet of paper with Shaper Origin compatible
-          fudicial dominoes on it. Default presets are optimal for a 8x11" US
-          letter.
-        </p>
-        <p>The dominoes generated will always match the Project Name.</p>
+      <div class="hello">
+        <h2>Shaper Taper V2</h2>
+        <p>Generate repeatable <a href="https://www.shapertools.com/">Shaper Origin</a> domino fiducials from your project name</p>
+      </div>
+      <nav>  
         <div class="options">
           <label>
-            <input type="text" v-model="randomSeed" placeholder="random seed" />
-            Project Name
-          </label>
-          <label>
+            Dominoes<br>
             <input type="number" v-model="dominoCount" min="1" max="373" />
-            Dominoes
           </label>
           <label>
-            <input type="number" v-model="rowSpacing" min="1" size="1" />
-            Row Spacing
+            ↕ Row Spacing (inches)<br>
+            <input type="number" v-model="rowSpacing" min="0.1"  step="0.1" />
           </label>
           <label>
-            <input type="number" v-model="columnSpacing" min="1" size="1" />
-            Column Spacing
+            ↔ Column Spacing (inches)<br>
+            <input type="number" v-model="columnSpacing" min="0.1"   step="0.1" />
           </label>
+          <button class="print-button" onClick="window.print()">Print</button>
         </div>
       </nav>
 
       <h1>
-        {{randomSeed}}
-        <button class="print" onClick="window.print()">Print</button>
+        <!-- {{randomSeed}} -->
+        <label>
+          <!-- Project Name<br> -->
+          <input type="text" v-model="randomSeed" placeholder="Type Your Project Name Here" class="project-name" />
+        </label>
       </h1>
 
       <div
         class="domino-grid"
-        :style="{ 'grid-column-gap': columnSpacing+'mm', 'grid-row-gap': rowSpacing+'mm'}"
+        :style="{ 'grid-column-gap': columnSpacing+'in', 'grid-row-gap': rowSpacing+'in'}"
       >
         <!-- <domino-template  dots="permutation[d]"/> -->
         <div v-for="d in permutation" class="domino">
-          <svg width="2.02in" height="0.5in">
-            <use xlink:href="#domino_body" x="0.01in" />
+          <svg width="1.7in" height="0.5in">
+            <use xlink:href="#domino_body" x="0" y="0" />
             <!-- dots that never go away -->
-            <use xlink:href="#domino_dot" x="0.14in" y="0.16in" />
-            <use xlink:href="#domino_dot" x="0.14in" y="0.35in" />
-            <use xlink:href="#domino_dot" x="1.51in" y="0.16in" />
-            <use xlink:href="#domino_dot" x="1.51in" y="0.35in" />
+            <use xlink:href="#domino_dot" x="0.15in" y="0.15in" />
+            <use xlink:href="#domino_dot" x="0.15in" y="0.35in" />
+            <use xlink:href="#domino_dot" x="1.55in" y="0.15in" />
+            <use xlink:href="#domino_dot" x="1.55in" y="0.35in" />
 
             <!-- row 1 (left to right) -->
             <use
               xlink:href="#domino_dot"
-              x="0.335714in"
-              y="0.16in"
+              x="0.35in"
+              y="0.15in"
               v-if="d[0][0]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.531428in"
-              y="0.16in"
+              x="0.55in"
+              y="0.15in"
               v-if="d[0][1]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.727143in"
-              y="0.16in"
+              x="0.75in"
+              y="0.15in"
               v-if="d[0][2]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.922857in"
-              y="0.16in"
+              x="0.95in"
+              y="0.15in"
               v-if="d[0][3]"
             />
             <use
               xlink:href="#domino_dot"
-              x="1.118571in"
-              y="0.16in"
+              x="1.15in"
+              y="0.15in"
               v-if="d[0][4]"
             />
             <use
               xlink:href="#domino_dot"
-              x="1.314286in"
-              y="0.16in"
+              x="1.35in"
+              y="0.15in"
               v-if="d[0][5]"
             />
 
             <!-- row 2 (right to left) -->
             <use
               xlink:href="#domino_dot"
-              x="1.314286in"
+              x="1.35in"
               y="0.35in"
               v-if="d[1][0]"
             />
             <use
               xlink:href="#domino_dot"
-              x="1.118571in"
+              x="1.15in"
               y="0.35in"
               v-if="d[1][1]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.922857in"
+              x="0.95in"
               y="0.35in"
               v-if="d[1][2]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.7237143in"
+              x="0.75in"
               y="0.35in"
               v-if="d[1][3]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.5341428in"
+              x="0.55in"
               y="0.35in"
               v-if="d[1][4]"
             />
             <use
               xlink:href="#domino_dot"
-              x="0.3345714in"
+              x="0.35in"
               y="0.35in"
               v-if="d[1][5]"
             />

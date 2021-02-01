@@ -92,10 +92,10 @@ const app = new Vue({
   components: { "domino-template": { template: "#domino-template" } },
   data() {
     return {
-      randomSeed: "My Rad Project",
-      dominoCount: 28,
-      rowSpacing: 20,
-      columnSpacing: 1,
+      randomSeed: "",
+      dominoCount: 36,
+      rowSpacing: 0.5,
+      columnSpacing: 0.0,
       validCombos: validCombinations,
     };
   },

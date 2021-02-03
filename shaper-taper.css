@@ -62,3 +62,17 @@ nav {
 h2 {
   margin-top: 0;
 }
+
+.warning { background-color:yellow; }
+
+.if-safari {
+  visibility:none;
+}
+
+body.is-safari .if-safari {
+  visibility:visible;
+}
+
+body.is-safari .domino {
+  transform: scale(0.935);
+}

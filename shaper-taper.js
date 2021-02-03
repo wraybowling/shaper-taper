@@ -1,3 +1,8 @@
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+if(isSafari){
+  document.body.classList.add('is-safari');
+}
+
 const validBitCombos = [
   [
     //0 one/five bit
@@ -92,7 +97,7 @@ const app = new Vue({
   components: { "domino-template": { template: "#domino-template" } },
   data() {
     return {
-      randomSeed: "",
+      randomSeed: "My Shaper Project",
       dominoCount: 36,
       rowSpacing: 0.5,
       columnSpacing: 0.0,
